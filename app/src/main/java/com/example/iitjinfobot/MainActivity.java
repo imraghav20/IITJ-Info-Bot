@@ -3,7 +3,9 @@ package com.example.iitjinfobot;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -66,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
             tv.setText("Hello " + personGivenName + ". I am your IITJ Assistant. How can I help you?");
             tv.setTextSize(16);
             tv.setPadding(6, 6, 6, 6);
-            Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.logo);
+
+            Typeface face = Typeface.createFromAsset(getAssets(),
+                    "font/montserrat.ttf");
+            tv.setTypeface(face);
+
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.logo);
             img.setBounds(0, 0, 60, 60);
             tv.setCompoundDrawables(img, null, null, null);
 

@@ -28,6 +28,7 @@
                 android:padding="18dp"
                 android:layout_marginBottom="6dp"
                 android:text="👋"
+                android:fontFamily="@font/montserrat"
                 android:textColor="@color/white"
                 android:textSize="24dp" />
 
@@ -54,6 +55,7 @@
             android:layout_weight="8"
             android:background="@drawable/message_edit_text_background"
             android:hint="Type your message..."
+            android:fontFamily="@font/montserrat"
             android:padding="6dp"
             android:textCursorDrawable="@drawable/cursor"
             android:textSize="18dp" />
