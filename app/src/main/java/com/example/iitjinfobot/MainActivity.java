@@ -22,10 +22,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     GoogleSignInClient mGoogleSignInClient;
+
+    private DatabaseReference usersRef;
 
     private TextView helloUser;
     private LinearLayout chat_layout;
@@ -45,17 +51,28 @@ public class MainActivity extends AppCompatActivity {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
         helloUser = findViewById(R.id.user_hello);
         chat_layout = findViewById(R.id.chat_layout);
         message = findViewById(R.id.message);
         send = findViewById(R.id.send_button);
 
         if (acct != null) {
-//            String personName = acct.getDisplayName();
+            String personName = acct.getDisplayName();
             String personGivenName = acct.getGivenName();
-//            String personFamilyName = acct.getFamilyName();
-//            String personEmail = acct.getEmail();
-//            String personId = acct.getId();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+
+            HashMap<String, Object> profileMap = new HashMap<>();
+            profileMap.put("userName", personName);
+            profileMap.put("userGivenName", personGivenName);
+            profileMap.put("userFamilyName", personFamilyName);
+            profileMap.put("userEmail", personEmail);
+            profileMap.put("userID", personId);
+
+            usersRef.child(personId).updateChildren(profileMap);
 
             String greetingText = helloUser.getText().toString();
             greetingText += " Hello\n" + personGivenName;

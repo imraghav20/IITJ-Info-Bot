@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/launch_logo"
         android:layout_centerHorizontal="true"
-        android:text="Sign In to Continue"
         android:fontFamily="@font/montserrat"
+        android:text="Sign In to Continue"
         android:textColor="@color/black"
         android:textSize="18dp" />
 
