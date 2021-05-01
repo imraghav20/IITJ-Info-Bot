@@ -7,34 +7,12 @@
     android:background="@color/blue_light"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:id="@+id/chat_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/type_layout">
-
-        <LinearLayout
-            android:id="@+id/chat_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/user_hello"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:background="@drawable/chat_top"
-                android:fontFamily="@font/montserrat"
-                android:gravity="center"
-                android:padding="18dp"
-                android:text="👋"
-                android:textColor="@color/white"
-                android:textSize="24dp" />
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_above="@+id/type_layout"
+        android:padding="6dp" />
 
     <LinearLayout
         android:id="@+id/type_layout"
