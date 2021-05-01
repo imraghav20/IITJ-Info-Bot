@@ -7,4 +7,6 @@
         />
     <gradient android:startColor="@color/blue"
         android:endColor="@color/blue"/>
+
+    <stroke android:width="2px" android:color="@color/black"/>
 </shape>
