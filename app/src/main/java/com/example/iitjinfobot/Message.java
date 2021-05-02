@@ -1,17 +1,23 @@
 package com.example.iitjinfobot;
 
+import java.util.List;
+
 public class Message {
     String id, date, time, message, type;
+    Boolean hasOptions;
+    List<String> options;
 
     public Message() {
     }
 
-    public Message(String id, String date, String time, String message, String type) {
+    public Message(String id, String date, String time, String message, String type, Boolean hasOptions, List<String> options) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.message = message;
         this.type = type;
+        this.hasOptions = hasOptions;
+        this.options = options;
     }
 
     public String getId() {
@@ -52,5 +58,21 @@ public class Message {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Boolean getHasOptions() {
+        return hasOptions;
+    }
+
+    public void setHasOptions(Boolean hasOptions) {
+        this.hasOptions = hasOptions;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
     }
 }

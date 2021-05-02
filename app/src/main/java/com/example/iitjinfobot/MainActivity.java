@@ -37,8 +37,11 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -93,6 +96,38 @@ public class MainActivity extends AppCompatActivity {
             profileMap.put("userID", personId);
 
             usersRef.child(personId).updateChildren(profileMap);
+
+            messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(userId);
+
+            final String messageKey = messageRef.push().getKey();
+            final String type = "received";
+            final String messageText = "Hello " + personGivenName + "! I am your IITJ Assistant. How can I help you?\nI can help you with: ";
+
+            Calendar calForDate = Calendar.getInstance();
+            SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd yyyy");
+            String currentDate = currentDateFormat.format(calForDate.getTime());
+
+            Calendar calForTime = Calendar.getInstance();
+            SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
+            String currentTime = currentTimeFormat.format(calForTime.getTime());
+
+            List<String> options = new ArrayList<String>();
+            options.add("Mess Menu");
+            options.add("Bus Schedule");
+            options.add("Timetable");
+            options.add("Gymkhana Details");
+            options.add("Faculty Details");
+
+            HashMap<String, Object> messageMap = new HashMap<>();
+            messageMap.put("id", messageKey);
+            messageMap.put("message", messageText);
+            messageMap.put("type", type);
+            messageMap.put("date", currentDate);
+            messageMap.put("time", currentTime);
+            messageMap.put("hasOptions", true);
+            messageMap.put("options", options);
+
+            messageRef.child(messageKey).updateChildren(messageMap);
 
         } else {
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -155,6 +190,20 @@ public class MainActivity extends AppCompatActivity {
                         String date = snapshot.child("date").getValue().toString();
                         String time = snapshot.child("time").getValue().toString();
                         String type = snapshot.child("type").getValue().toString();
+                        Boolean hasOptions = (Boolean) snapshot.child("hasOptions").getValue();
+
+                        if(hasOptions){
+                            List<String> options = (List<String>) snapshot.child("options").getValue();
+                            List<Option> optionList = new ArrayList<Option>();
+                            for(int i = 0; i < options.size(); i++){
+                                Option option = new Option();
+                                option.setOption_value(options.get(i));
+                                optionList.add(option);
+                            }
+                            messageViewHolder.optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            OptionsAdapter optionsAdapter = new OptionsAdapter(getApplication(), optionList);
+                            messageViewHolder.optionsRecyclerView.setAdapter(optionsAdapter);
+                        }
 
                         if (type.equals("sent")) {
                             messageViewHolder.messageLayout.setGravity(Gravity.RIGHT);
@@ -195,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
         TextView message, date, time;
         ImageView botImg;
         LinearLayout messageLayout, messageBox;
+        RecyclerView optionsRecyclerView;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -205,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
             botImg = itemView.findViewById(R.id.robotImage);
             messageLayout = itemView.findViewById(R.id.message_layout);
             messageBox = itemView.findViewById(R.id.message_box);
+            optionsRecyclerView = itemView.findViewById(R.id.options_recycler_view);
         }
     }
 
