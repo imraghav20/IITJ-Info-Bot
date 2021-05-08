@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference usersRef;
     private DatabaseReference messageRef;
     private String userId = "";
+    private List<String> commands = new ArrayList<>();
 
     //    private TextView helloUser;
 //    private LinearLayout chat_layout;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     messageMap.put("type", type);
                     messageMap.put("date", currentDate);
                     messageMap.put("time", currentTime);
+                    messageMap.put("hasOptions", false);
 
                     messageRef.child(messageKey).updateChildren(messageMap);
                     message.setText("");
@@ -201,11 +203,16 @@ public class MainActivity extends AppCompatActivity {
                                 optionList.add(option);
                             }
                             messageViewHolder.optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            OptionsAdapter optionsAdapter = new OptionsAdapter(getApplication(), optionList);
+                            OptionsAdapter optionsAdapter = new OptionsAdapter(getApplication(), optionList, userId, commands);
                             messageViewHolder.optionsRecyclerView.setAdapter(optionsAdapter);
                         }
 
                         if (type.equals("sent")) {
+                            String cmd = msg.replaceAll("/", "");
+                            String[] cmds = cmd.split("-");
+                            cmd = cmds[cmds.length-1];
+                            commands.add(cmd);
+
                             messageViewHolder.messageLayout.setGravity(Gravity.RIGHT);
                             messageViewHolder.botImg.setVisibility(View.INVISIBLE);
                             messageViewHolder.messageBox.setBackgroundResource(R.drawable.user_text);
