@@ -55,7 +55,7 @@
                 <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/abhishek" />
+                    android:src="@drawable/abhishek_raghav" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                 <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/abhishek" />
+                    android:src="@drawable/aklovya_gupta" />
 
                 <TextView
                     android:layout_width="wrap_content"
