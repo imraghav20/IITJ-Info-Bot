@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -52,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private String userId = "";
     private List<String> commands = new ArrayList<>();
 
-    //    private TextView helloUser;
-//    private LinearLayout chat_layout;
-    private EditText message;
-    private ImageButton send;
     private RecyclerView chat_view;
 
     @Override
@@ -73,13 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-//        helloUser = findViewById(R.id.user_hello);
-//        chat_layout = findViewById(R.id.chat_layout);
         chat_view = findViewById(R.id.chat_recycler_view);
         chat_view.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        message = findViewById(R.id.message);
-        send = findViewById(R.id.send_button);
 
         if (acct != null) {
             String personName = acct.getDisplayName();
@@ -139,37 +132,6 @@ public class MainActivity extends AppCompatActivity {
 
         messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(userId);
 
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String messageText = message.getText().toString();
-                if (TextUtils.isEmpty(messageText)) {
-                    Toast.makeText(MainActivity.this, "Please enter a message first.", Toast.LENGTH_SHORT).show();
-                } else {
-                    final String messageKey = messageRef.push().getKey();
-                    final String type = "sent";
-
-                    Calendar calForDate = Calendar.getInstance();
-                    SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd yyyy");
-                    String currentDate = currentDateFormat.format(calForDate.getTime());
-
-                    Calendar calForTime = Calendar.getInstance();
-                    SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
-                    String currentTime = currentTimeFormat.format(calForTime.getTime());
-
-                    HashMap<String, Object> messageMap = new HashMap<>();
-                    messageMap.put("id", messageKey);
-                    messageMap.put("message", messageText);
-                    messageMap.put("type", type);
-                    messageMap.put("date", currentDate);
-                    messageMap.put("time", currentTime);
-                    messageMap.put("hasOptions", false);
-
-                    messageRef.child(messageKey).updateChildren(messageMap);
-                    message.setText("");
-                }
-            }
-        });
     }
 
     @Override
@@ -205,8 +167,7 @@ public class MainActivity extends AppCompatActivity {
                             messageViewHolder.optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                             OptionsAdapter optionsAdapter = new OptionsAdapter(getApplication(), optionList, userId, commands);
                             messageViewHolder.optionsRecyclerView.setAdapter(optionsAdapter);
-                        }
-                        else {
+                        } else {
                             if (type.equals("received")) {
                                 commands = new ArrayList<>();
                             }

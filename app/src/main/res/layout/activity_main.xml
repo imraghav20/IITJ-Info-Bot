@@ -14,38 +14,4 @@
         android:layout_above="@+id/type_layout"
         android:padding="6dp" />
 
-    <LinearLayout
-        android:id="@+id/type_layout"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/message"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="6dp"
-            android:layout_weight="8"
-            android:background="@drawable/message_edit_text_background"
-            android:fontFamily="@font/montserrat"
-            android:hint="Type your message..."
-            android:padding="6dp"
-            android:textCursorDrawable="@drawable/cursor"
-            android:textSize="18dp" />
-
-        <ImageButton
-            android:id="@+id/send_button"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/round_button"
-            android:padding="6dp"
-            android:src="@drawable/ic_baseline_send_24" />
-
-    </LinearLayout>
-
 </RelativeLayout>
