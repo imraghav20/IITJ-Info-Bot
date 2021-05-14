@@ -205,40 +205,10 @@ public class MainActivity extends AppCompatActivity {
                             messageViewHolder.optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                             OptionsAdapter optionsAdapter = new OptionsAdapter(getApplication(), optionList, userId, commands);
                             messageViewHolder.optionsRecyclerView.setAdapter(optionsAdapter);
-                        } else {
+                        }
+                        else {
                             if (type.equals("received")) {
                                 commands = new ArrayList<>();
-//                                messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(userId);
-//
-                                final String messageKey = messageRef.push().getKey();
-//                                final String type = "received";
-                                final String messageText = "Hello! I am your IITJ Assistant. How can I help you?\nI can help you with: ";
-
-                                Calendar calForDate = Calendar.getInstance();
-                                SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd yyyy");
-                                String currentDate = currentDateFormat.format(calForDate.getTime());
-
-                                Calendar calForTime = Calendar.getInstance();
-                                SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
-                                String currentTime = currentTimeFormat.format(calForTime.getTime());
-
-                                List<String> options = new ArrayList<String>();
-                                options.add("Mess Menu");
-                                options.add("Bus Schedule");
-                                options.add("Timetable");
-                                options.add("Gymkhana Details");
-                                options.add("Faculty Details");
-
-                                HashMap<String, Object> messageMap = new HashMap<>();
-                                messageMap.put("id", messageKey);
-                                messageMap.put("message", messageText);
-                                messageMap.put("type", type);
-                                messageMap.put("date", currentDate);
-                                messageMap.put("time", currentTime);
-                                messageMap.put("hasOptions", true);
-                                messageMap.put("options", options);
-
-                                messageRef.child(messageKey).updateChildren(messageMap);
                             }
                         }
 
