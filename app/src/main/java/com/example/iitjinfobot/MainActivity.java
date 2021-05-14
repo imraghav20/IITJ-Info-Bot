@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> commands = new ArrayList<>();
 
     private RecyclerView chat_view;
+
+    private FirebaseRecyclerOptions options;
+    FirebaseRecyclerAdapter<Message, MessageViewHolder> firebaseRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,17 +136,11 @@ public class MainActivity extends AppCompatActivity {
 
         messageRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(userId);
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Message>()
+        options = new FirebaseRecyclerOptions.Builder<Message>()
                 .setQuery(messageRef, Message.class)
                 .build();
 
-        FirebaseRecyclerAdapter<Message, MessageViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull MessageViewHolder messageViewHolder, int i, @NonNull Message message) {
                 final String msgId = getRef(i).getKey();
@@ -210,7 +208,19 @@ public class MainActivity extends AppCompatActivity {
 
         chat_view.setAdapter(firebaseRecyclerAdapter);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         firebaseRecyclerAdapter.startListening();
+
+        firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                chat_view.smoothScrollToPosition(firebaseRecyclerAdapter.getItemCount() - 1);
+            }
+        });
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {

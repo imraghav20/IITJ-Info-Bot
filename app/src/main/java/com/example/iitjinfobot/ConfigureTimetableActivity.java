@@ -40,6 +40,9 @@ public class ConfigureTimetableActivity extends AppCompatActivity {
 
     private RecyclerView configTtView;
 
+    private FirebaseRecyclerOptions recyclerOptions;
+    private FirebaseRecyclerAdapter<Message, MessageViewHolder> firebaseRecyclerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,17 +89,12 @@ public class ConfigureTimetableActivity extends AppCompatActivity {
         messageMap.put("options", options);
 
         ttConfigRef.child(messageKey).updateChildren(messageMap);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Message>()
+        recyclerOptions = new FirebaseRecyclerOptions.Builder<Message>()
                 .setQuery(ttConfigRef, Message.class)
                 .build();
 
-        FirebaseRecyclerAdapter<Message, MessageViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(recyclerOptions) {
             @Override
             protected void onBindViewHolder(@NonNull MessageViewHolder messageViewHolder, int i, @NonNull Message message) {
                 final String msgId = getRef(i).getKey();
@@ -162,8 +160,19 @@ public class ConfigureTimetableActivity extends AppCompatActivity {
         };
 
         configTtView.setAdapter(firebaseRecyclerAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         firebaseRecyclerAdapter.startListening();
+
+        firebaseRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                configTtView.smoothScrollToPosition(firebaseRecyclerAdapter.getItemCount() - 1);
+            }
+        });
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
