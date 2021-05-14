@@ -238,6 +238,62 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHold
                                     }
                                 });
                             }
+                            else{
+                                String ttMsg = "We received some issue. Please try again.";
+                                final String messageKey = messageRef.push().getKey();
+                                final String type = "received";
+
+                                Calendar calForDate = Calendar.getInstance();
+                                SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd yyyy");
+                                String currentDate = currentDateFormat.format(calForDate.getTime());
+
+                                Calendar calForTime = Calendar.getInstance();
+                                SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
+                                String currentTime = currentTimeFormat.format(calForTime.getTime());
+
+                                HashMap<String, Object> messageMap = new HashMap<>();
+                                messageMap.put("id", messageKey);
+                                messageMap.put("message", ttMsg);
+                                messageMap.put("type", type);
+                                messageMap.put("date", currentDate);
+                                messageMap.put("time", currentTime);
+                                messageMap.put("hasOptions", false);
+
+                                messageRef.child(messageKey).updateChildren(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        final String messageKey = messageRef.push().getKey();
+                                        final String type = "received";
+                                        final String messageText = "Hello! I am your IITJ Assistant. How can I help you?\nI can help you with: ";
+
+                                        Calendar calForDate = Calendar.getInstance();
+                                        SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd yyyy");
+                                        String currentDate = currentDateFormat.format(calForDate.getTime());
+
+                                        Calendar calForTime = Calendar.getInstance();
+                                        SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
+                                        String currentTime = currentTimeFormat.format(calForTime.getTime());
+
+                                        List<String> options = new ArrayList<String>();
+                                        options.add("Mess Menu");
+                                        options.add("Bus Schedule");
+                                        options.add("Timetable");
+                                        options.add("Gymkhana Details");
+                                        options.add("Faculty Details");
+
+                                        HashMap<String, Object> messageMap = new HashMap<>();
+                                        messageMap.put("id", messageKey);
+                                        messageMap.put("message", messageText);
+                                        messageMap.put("type", type);
+                                        messageMap.put("date", currentDate);
+                                        messageMap.put("time", currentTime);
+                                        messageMap.put("hasOptions", true);
+                                        messageMap.put("options", options);
+
+                                        messageRef.child(messageKey).updateChildren(messageMap);
+                                    }
+                                });
+                            }
                         } else {
                             for (int i = 0; i < commands.size(); i++) {
                                 String retrieveLabel = commands.get(i).replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2");
@@ -268,9 +324,12 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHold
                                     if (snapshot.hasChild("Message")) {
                                         messageMap.put("message", snapshot.child("Message").getValue().toString());
                                     }
-
-                                    if (snapshot.hasChild("Value")) {
+                                    else if (snapshot.hasChild("Value")) {
                                         messageMap.put("message", snapshot.child("Value").getValue().toString());
+                                        messageMap.put("hasOptions", false);
+                                    }
+                                    else{
+                                        messageMap.put("message", "We received some issue. Please try again.");
                                         messageMap.put("hasOptions", false);
                                     }
 
@@ -294,7 +353,7 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHold
                                     messageRef.child(messageKey).updateChildren(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            if (snapshot.hasChild("Value")) {
+                                            if (! snapshot.hasChild("Message")) {
                                                 final String messageKey = messageRef.push().getKey();
                                                 final String type = "received";
                                                 final String messageText = "Hello! I am your IITJ Assistant. How can I help you?\nI can help you with: ";

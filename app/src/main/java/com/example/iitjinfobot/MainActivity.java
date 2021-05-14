@@ -148,11 +148,19 @@ public class MainActivity extends AppCompatActivity {
                 messageRef.child(msgId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String msg = snapshot.child("message").getValue().toString();
+                        String msg = "";
+                        Boolean hasOptions = (Boolean) snapshot.child("hasOptions").getValue();
+                        if(snapshot.hasChild("message")){
+                            msg = snapshot.child("message").getValue().toString();
+                        }
+                        else{
+                            msg = "We received some issue. Please try again.";
+                            commands = new ArrayList<>();
+                            hasOptions = false;
+                        }
                         String date = snapshot.child("date").getValue().toString();
                         String time = snapshot.child("time").getValue().toString();
                         String type = snapshot.child("type").getValue().toString();
-                        Boolean hasOptions = (Boolean) snapshot.child("hasOptions").getValue();
 
                         if (hasOptions) {
                             List<String> options = (List<String>) snapshot.child("options").getValue();
