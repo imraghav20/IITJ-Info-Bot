@@ -1,6 +1,10 @@
 package com.example.iitjinfobot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Message {
     String id, date, time, message, type;
@@ -74,5 +78,39 @@ public class Message {
 
     public void setOptions(List<String> options) {
         this.options = options;
+    }
+
+    public static Boolean isValidMessage(String id, String date, String time, String message, String type, Boolean hasOptions, List<String> options){
+        if(! isValidDate(date) || ! isValidTime(time) || message.isEmpty() || ! (type.equals("received") || (type.equals("sent")))){
+            return false;
+        }
+        else if(hasOptions){
+            return !options.isEmpty();
+        }
+        else if(!hasOptions){
+            return options.isEmpty();
+        }
+        return true;
+    }
+
+    public static Boolean isValidTime(String time){
+        String regexPattern = "(1[012]|0[1-9]):" + "[0-5][0-9](\\s)" + "?(?i)(am|pm)";
+        Pattern compiledPattern = Pattern.compile(regexPattern);
+        if(time == null){
+            return false;
+        }
+        Matcher m = compiledPattern.matcher(time);
+        return m.matches();
+    }
+
+    public static boolean isValidDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(date.trim());
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
     }
 }
