@@ -81,10 +81,13 @@ public class Message {
     }
 
     public static Boolean isValidMessage(String id, String date, String time, String message, String type, Boolean hasOptions, List<String> options){
-        if(! isValidDate(date) || ! isValidTime(time) || message.isEmpty() || ! (type.equals("received") || (type.equals("sent")))){
+        if(id.isEmpty() || ! isValidDate(date) || ! isValidTime(time) || message.isEmpty() || ! (type.equals("received") || (type.equals("sent")))){
             return false;
         }
         else if(hasOptions){
+            if(type.equals("sent")){
+                return false;
+            }
             return !options.isEmpty();
         }
         else if(!hasOptions){

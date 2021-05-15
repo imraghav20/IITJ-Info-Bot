@@ -17,6 +17,12 @@ public class MessageTest {
     }
 
     @Test
+    public void emptyId(){
+        Boolean result = Message.isValidMessage("", "May 08 2021", "11:05 PM", "Hello!", "sent", false, Collections.emptyList());
+        assertThat(result).isFalse();
+    }
+
+    @Test
     public void invalidDate1(){
         Boolean result = Message.isValidMessage("abcd123", "Mayy 08 2021", "11:05 PM", "Hello!", "sent", false, Collections.emptyList());
         assertThat(result).isFalse();
@@ -60,7 +66,7 @@ public class MessageTest {
 
     @Test
     public void optionsConflict1(){
-        Boolean result = Message.isValidMessage("abcd123", "May 08 2021", "12:05 PM", "Hello!", "got", true, Collections.emptyList());
+        Boolean result = Message.isValidMessage("abcd123", "May 08 2021", "12:05 PM", "Hello!", "received", true, Collections.emptyList());
         assertThat(result).isFalse();
     }
 
@@ -70,6 +76,15 @@ public class MessageTest {
         options.add("Mess menu");
         options.add("Bus schedule");
         Boolean result = Message.isValidMessage("abcd123", "May 08 2021", "12:05 PM", "Hello!", "received", false, options);
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void optionsConflict3(){
+        List<String> options = new ArrayList<>();
+        options.add("Mess menu");
+        options.add("Bus schedule");
+        Boolean result = Message.isValidMessage("abcd123", "May 08 2021", "12:05 PM", "Hello!", "sent", true, options);
         assertThat(result).isFalse();
     }
 
